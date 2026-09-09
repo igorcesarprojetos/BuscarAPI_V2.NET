@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="BuscarAPI_V2.Domain/BuscarAPI_V2.Domain.csproj" Id="a57127c2-20ed-4a7e-b7b3-ee6fb9942c0c" />
+  <Project Path="BuscarAPI_V2.Main/BuscarAPI_V2.Main.csproj" />
+  <Project Path="BuscarAPI_V2.Services/BuscarAPI_V2.Services.csproj" Id="9fd53a16-3f4a-4341-a9f3-4ca69a421608" />
+</Solution>

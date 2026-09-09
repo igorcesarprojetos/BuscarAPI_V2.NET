@@ -1,0 +1,126 @@
+﻿@page "/perfil/edit"
+@* @inject IDbContextFactory<BuscarAPI_V2.Main.Data.BuscarAPI_V2MainContext> DbFactory *@
+@inject NavigationManager NavigationManager
+@inject IPerfilService perfilService
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>Perfil</h2>
+<hr />
+@if (Perfil is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Perfil" OnValidSubmit="UpdatePerfil" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="Perfil.Id_Perfil" value="@Perfil.Id" />
+                <div class="mb-3">
+                    <label for="descricaoperfil" class="form-label">DescricaoPerfil:</label>
+                    <InputText id="descricaoperfil" @bind-Value="Perfil.DescricaoPerfil" class="form-control" />
+                    <ValidationMessage For="() => Perfil.DescricaoPerfil" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/perfis">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id_Perfil { get; set; }
+
+    [SupplyParameterFromForm]
+    private Perfil? Perfil { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // using var context = DbFactory.CreateDbContext();
+        // Perfil ??= await context.Perfil.FirstOrDefaultAsync(m => m.Id_Perfil == Id_Perfil);
+
+        // if (Perfil is null)
+        // {
+        //     NavigationManager.NotFound();
+        // }           
+
+        //Perfil ??= await context.Perfil.FirstOrDefaultAsync(m => m.Id_Perfil == Id_Perfil);       
+
+        // if (Perfil is null)
+        // {
+        //     NavigationManager.NotFound();
+        // }
+
+        Perfil ??= await perfilService.GetPerfilId(Id_Perfil);
+
+        if (Perfil is null)
+        {
+            NavigationManager.NotFound();
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdatePerfil()
+    {
+        // using var context = DbFactory.CreateDbContext();
+        // context.Attach(Perfil!).State = EntityState.Modified;
+
+        // try
+        // {
+        //     await context.SaveChangesAsync();
+        // }
+        // catch (DbUpdateConcurrencyException)
+        // {
+        //     if (!PerfilExists(Perfil!.Id_Perfil))
+        //     {
+        //         NavigationManager.NotFound();
+        //     }
+        //     else
+        //     {
+        //         throw;
+        //     }
+        // }
+
+        // NavigationManager.NavigateTo("/perfils");
+
+        try
+        {
+            if (Perfil != null && Perfil.Id == 0)
+                Perfil.Id = Id_Perfil;
+
+            await perfilService.UpdatePerfil(Perfil);
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!PerfilExists(Perfil!.Id))
+            {
+                NavigationManager.NotFound();
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/perfis");
+    }
+
+    private bool PerfilExists(int id_perfil)
+    {
+        // using var context = DbFactory.CreateDbContext();
+        // return context.Perfil.Any(e => e.Id_Perfil == id_perfil);
+
+        return perfilService.GetPerfilId(Id_Perfil)!=null ? true: false;
+       
+    }
+}

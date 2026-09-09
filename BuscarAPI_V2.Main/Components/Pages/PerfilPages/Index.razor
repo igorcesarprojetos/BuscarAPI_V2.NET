@@ -1,0 +1,72 @@
+﻿@page "/perfis"
+@* @implements IAsyncDisposable *@
+@* @inject IDbContextFactory<BuscarAPI_V2.Main.Data.BuscarAPI_V2MainContext> DbFactory *@
+@inject IPerfilService perfilService
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="perfil/create">Create New</a>
+</p>
+
+  
+@* <QuickGrid Class="table" Items="context.Perfil">
+    <PropertyColumn Property="perfil => perfil.DescricaoPerfil" />
+    <TemplateColumn Context="perfil">
+        <a href="@($"perfil/edit?id_perfil={perfil.Id}")">Edit</a> |
+        <a href="@($"perfil/details?id_perfil={perfil.Id}")">Details</a> |
+        <a href="@($"perfil/delete?id_perfil={perfil.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid> *@
+
+@if (perfis == null)
+{
+    <p>Carregando...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Descricao</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var perfil in perfis)
+            {
+                <tr>
+                    <td>@perfil.DescricaoPerfil</td>
+                    <td>
+                        <a href="@($"perfil/details?id_perfil={perfil.Id}")">Details</a> |
+                        <a href="@($"perfil/edit?id_perfil={perfil.Id}")">Edit</a> |
+                        <a href="@($"perfil/delete?id_perfil={perfil.Id}")">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+@code {
+    //private BuscarAPI_V2MainContext context = default!;  
+
+    // protected async override void OnInitialized()
+    // {
+    //     context = DbFactory.CreateDbContext();        
+    // }
+
+    // public async ValueTask DisposeAsync() => await context.DisposeAsync();
+
+    private IEnumerable<Perfil> perfis { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        perfis = await perfilService.GetPerfis();
+    }
+
+}

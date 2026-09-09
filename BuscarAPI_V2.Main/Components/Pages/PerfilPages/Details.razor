@@ -1,0 +1,52 @@
+﻿@page "/perfil/details"
+@* @inject IDbContextFactory<BuscarAPI_V2.Main.Data.BuscarAPI_V2MainContext> DbFactory *@
+@inject NavigationManager NavigationManager
+@inject IPerfilService perfilService
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Perfil</h2>
+    <hr />
+    @if (perfil is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">DescricaoPerfil</dt>
+            <dd class="col-sm-10">@perfil.DescricaoPerfil</dd>
+        </dl>
+        <div>
+            <a href="@($"/perfil/edit?id_perfil={perfil.Id}")">Edit</a> |
+            <a href="@($"/perfis")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private Perfil? perfil;
+
+    [SupplyParameterFromQuery]
+    private int Id_Perfil { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // using var context = DbFactory.CreateDbContext();
+        // perfil = await context.Perfil.FirstOrDefaultAsync(m => m.Id == Id_Perfil);
+
+        // if (perfil is null)
+        // {
+        //     NavigationManager.NotFound();
+        // }
+
+        perfil = await perfilService.GetPerfilId(Id_Perfil);
+
+        if (perfil is null)
+        {
+            NavigationManager.NotFound();
+        }
+    }
+}

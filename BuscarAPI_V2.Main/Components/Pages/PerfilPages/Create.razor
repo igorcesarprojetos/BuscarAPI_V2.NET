@@ -1,0 +1,47 @@
+﻿@page "/perfil/create"
+@* @inject IDbContextFactory<BuscarAPI_V2.Main.Data.BuscarAPI_V2MainContext> DbFactory *@
+@inject NavigationManager NavigationManager
+@inject IPerfilService perfilService
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Perfil</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Perfil" OnValidSubmit="AddPerfil" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="descricaoperfil" class="form-label">DescricaoPerfil:</label> 
+                <InputText id="descricaoperfil" @bind-Value="Perfil.DescricaoPerfil" class="form-control" /> 
+                <ValidationMessage For="() => Perfil.DescricaoPerfil" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/perfis">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Perfil Perfil { get; set; } = default!;
+
+    protected override void OnInitialized() => Perfil ??= new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddPerfil()
+    {
+        // using var context = DbFactory.CreateDbContext();
+        // context.Perfil.Add(Perfil);
+        // await context.SaveChangesAsync();
+        // NavigationManager.NavigateTo("/perfils");
+        await perfilService.CreatePerfil(Perfil);
+        NavigationManager.NavigateTo("/perfis");
+    }
+}
